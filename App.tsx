@@ -30,11 +30,11 @@ export default class App extends React.Component {
   prepareResources = async () => {
     setTimeout(() => this.setState({ appIsReady: true }, async () => {
       await SplashScreen.hideAsync();
-    }), 2000)
+    }), 3000)
   };
 
   render() {
-    if (!this.state.appIsReady) {
+    if (this.state.appIsReady) {
       return <Splash/>
     }
 
