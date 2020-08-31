@@ -49,9 +49,6 @@ export default class Splash extends React.Component {
     ]
   }
 
-
-// back ={ backgroundColor: this.scaleFirstLayer }
-
   anim = Animated.interpolate(this.state.progress, {
     inputRange: [-1, 0],
     outputRange: [10, 20],

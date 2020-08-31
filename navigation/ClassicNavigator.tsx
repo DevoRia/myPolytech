@@ -7,11 +7,14 @@ import Colors from '../constants/Colors';
 import Constants from 'expo-constants';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
+import TabTwoScreen from '../screens/TabTwoScreen';
 import { BottomTabParamList, TabOneParamList } from '../types';
+import {Text, View} from "react-native";
+import ListSubjects from "../screens/ListSubjects";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-export default function BottomTabNavigator() {
+export default function ClassicNavigator() {
   const colorScheme = useColorScheme();
 
   return (
@@ -19,7 +22,7 @@ export default function BottomTabNavigator() {
       initialRouteName="TabOne"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name=" "
+        name="TabOne"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="md-star-outline" color={'white'} />,
@@ -43,8 +46,8 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
+        name="TabTwo"
+        component={ListSubjects}
         options={{ headerTitle: Constants.manifest.name }}
       />
     </TabOneStack.Navigator>

@@ -34,7 +34,7 @@ export default class App extends React.Component {
   };
 
   render() {
-    if (this.state.appIsReady) {
+    if (!this.state.appIsReady) {
       return <Splash/>
     }
 
