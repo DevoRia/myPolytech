@@ -22,14 +22,12 @@ export default class Scheduler extends React.Component<any, any> {
   }
 
   renderItem({ item, index }: any) {
-    console.log(item);
     return (
         <Card key={index}>
           <CardItem key={index} >
             <Text>
               {`${item.title} \n ${item.type} ауд. ${item.room} \n ${item.teacher}`}
             </Text>
-
           </CardItem>
         </Card>
       )

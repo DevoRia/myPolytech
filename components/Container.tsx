@@ -6,13 +6,10 @@ import Loader from './Loader';
 
 export const Container = ({children, loading}: any) => {
 
-  if (loading) {
-    return <Loader style={styles.indicator}/>
-  }
-
   return (
     <View style={styles.container}>
       {children}
+      <Loader loading={loading}/>
     </View>
 
   );
@@ -21,18 +18,6 @@ export const Container = ({children, loading}: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "relative"
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  indicator: {
-  }
 });

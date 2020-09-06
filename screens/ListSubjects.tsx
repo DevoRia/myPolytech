@@ -6,7 +6,7 @@ import Scheduler from "../components/Scheduler";
 export default class ListSubjects extends React.Component<any, any> {
   render() {
     return (
-      <Container loading={false}>
+      <Container loading={true}>
         <Scheduler/>
       </Container>
     );
