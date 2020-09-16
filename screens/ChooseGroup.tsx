@@ -1,8 +1,14 @@
 import * as React from 'react';
-import {StyleSheet} from 'react-native';
+import {Alert, BackHandler, Button, StyleSheet, TouchableOpacity} from 'react-native';
 import { Container } from '../components/Container';
 import {View, Text} from "../components/Themed";
+// @ts-ignore
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import ListSubjects from "./ListSubjects";
+import {getGroups} from "../src/Group";
+import AsyncStorage from "@react-native-community/async-storage";
+import {Ionicons} from "@expo/vector-icons";
+import Constants from "expo-constants";
 
 export default class ChooseGroup extends React.Component<any, any> {
 
@@ -10,28 +16,70 @@ export default class ChooseGroup extends React.Component<any, any> {
     super(props);
     this.state = {
       serverData: [],
-      loading: false
+      loading: false,
+      selectedItem: null,
     };
   }
 
-  componentDidMount() {
-    fetch('https://aboutreact.herokuapp.com/demosearchables.php')
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          serverData: [...this.state.serverData, ...responseJson.results],
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  async componentDidMount() {
+    this.setState({loading: true})
+    this.props.navigation.setOptions({
+      headerTitle: '',
+      headerLeft: () => <View><Text style={styles.navigation}>{Constants.manifest.name}</Text></View>,
+    })
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    const {list} = await getGroups();
+    this.setState({ serverData: list })
+    this.setState({loading: false})
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   onItemSelect(item: any) {
     this.setState({loading: true})
+    this.setState({selectedItem: item})
+    this.setState({loading: false})
+  }
+
+  async onSubmitItem() {
+    this.setState({loading: true})
+    await AsyncStorage.setItem('group', JSON.stringify(this.state.selectedItem));
+    this.props.navigation.navigate('ListSubjects', {group: this.state.selectedItem});
+    this.setState({loading: false})
+  }
+
+  handleBackButton = () => {
+    Alert.alert(
+      'Закрити myPolytech?',
+      'Бажаєте закрити додаток?', [{
+        text: 'Ні',
+        onPress: () => {},
+        style: 'cancel'
+      }, {
+        text: 'Так',
+        onPress: () => BackHandler.exitApp()
+      }, ], {
+        cancelable: true
+      }
+    )
+    return true;
   }
 
   render() {
+    let submit = null
+    if (this.state.selectedItem) {
+      submit = (
+      <TouchableOpacity
+        style={styles.submit}
+        onPress={this.onSubmitItem.bind(this)}
+      >
+        <Ionicons style={styles.submitText} name="md-arrow-forward" size={25} color="white"/>
+      </TouchableOpacity>
+      )
+    }
+
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
@@ -39,8 +87,8 @@ export default class ChooseGroup extends React.Component<any, any> {
             Введіть назву своєї групи:
           </Text>
           <SearchableDropdown
-            onTextChange={(text: string) => console.log(text)}
-            onItemSelect={(item: any) => this.onItemSelect(item)}
+            onTextChange={async (text: string) => this.setState({selectedItem: null})}
+            onItemSelect={this.onItemSelect.bind(this)}
             containerStyle={{ padding: 5 }}
             textInputStyle={styles.textInputStyle}
             itemStyle={styles.itemStyle}
@@ -53,6 +101,7 @@ export default class ChooseGroup extends React.Component<any, any> {
             underlineColorAndroid="transparent"
           />
         </View>
+        {submit}
       </Container>
     );
   }
@@ -70,10 +119,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: 'center',
   },
+  navigation: {
+    padding: 30,
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: 'black'
+  },
   textInputStyle: {
     textAlign: 'center',
     paddingLeft: 30,
     paddingRight: 30,
+    borderRadius: 20,
     paddingBottom: 10,
     paddingTop: 10,
     fontSize: 50,
@@ -93,5 +149,20 @@ const styles = StyleSheet.create({
   },
   itemTextStyle: {
     color: '#000000',
+  },
+  submit: {
+    right: 20,
+    bottom: 20,
+    position: 'absolute',
+    backgroundColor: 'black',
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 50,
+    paddingTop: 10,
+    height: 75,
+  },
+  submitText: {
+    marginTop: 15,
+    color: 'white'
   }
 });
