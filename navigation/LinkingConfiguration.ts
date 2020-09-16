@@ -6,9 +6,9 @@ export default {
     screens: {
       Root: {
         screens: {
-          Stared: {
+          Subjects: {
             screens: {
-              Stared: 'one',
+              Subjects: 'ListSubjects',
             },
           },
         },

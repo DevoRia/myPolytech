@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage'
 import * as SplashScreen from 'expo-splash-screen';
 import Splash from "./components/Splash";
 import * as Font from "expo-font";
@@ -30,8 +29,6 @@ export default class App extends React.Component {
 
   prepareResources = async () => {
     setTimeout(() => this.setState({ appIsReady: true }, async () => {
-      const isFirstOpen = await AsyncStorage.getItem("alreadyLaunched");
-
       await SplashScreen.hideAsync();
     }), 3000)
   };

@@ -9,7 +9,11 @@ export type BottomTabParamList = {
 };
 
 export type TabParamList = {
+  Start: undefined;
   TabScreen: undefined;
+  ListSubjects: undefined;
+  Settings: undefined;
+  SettingsSubgroups: undefined;
 };
 
 export type TabTwoParamList = {
