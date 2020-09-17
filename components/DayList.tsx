@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import { Container, Header, Title, Content, Icon, Card, CardItem, Text, Body, Left, Right, Footer, } from "native-base";
 
 export default class Scheduler extends React.Component<any, any> {
@@ -7,11 +7,22 @@ export default class Scheduler extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      day: props.day
+      day: props.day,
+      subgroups: props.subgroups
     }
   }
 
   renderItem(item: any, time: string) {
+    if (item.length === 1 && !(item[0].subgroup)) return this.simpleCard(item[0], time)
+    for (let i = 0; i < item.length; i++) {
+      if (item[i]) {
+        const find = this.state.subgroups.find((subject: any) => subject.name === item[i].name);
+        if (find.subgroup === item[i].subgroup) return this.simpleCard(item[i], time)
+      }
+    }
+  }
+
+  simpleCard(item: any, time: string) {
     if (!item) return (<View/>)
     return (
       <Card style={styles.card}>
@@ -40,12 +51,14 @@ export default class Scheduler extends React.Component<any, any> {
         <View style={styles.dayTitlePosition}>
           <Text style={styles.dayTitle}>{this.prepareDayTitle(this.state.day.title)}</Text>
         </View>
-        {this.renderItem(this.state.day.firstLesson[0], '8:30-9:50')}
-        {this.renderItem(this.state.day.secondLesson[0], '10:00-11:20')}
-        {this.renderItem(this.state.day.thirdLesson[0], '11:40-13:00')}
-        {this.renderItem(this.state.day.forthLesson[0], '13:30-14:50')}
-        {this.renderItem(this.state.day.fifthLesson[0], '15:00-16:20')}
-        {this.renderItem(this.state.day.sixthLesson[0], '16:30-17:50')}
+        <ScrollView>
+          {this.renderItem(this.state.day.firstLesson, '8:30-9:50')}
+          {this.renderItem(this.state.day.secondLesson, '10:00-11:20')}
+          {this.renderItem(this.state.day.thirdLesson, '11:40-13:00')}
+          {this.renderItem(this.state.day.forthLesson, '13:30-14:50')}
+          {this.renderItem(this.state.day.fifthLesson, '15:00-16:20')}
+          {this.renderItem(this.state.day.sixthLesson, '16:30-17:50')}
+        </ScrollView>
       </View>
     );
   }

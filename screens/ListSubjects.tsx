@@ -16,18 +16,27 @@ export default class ListSubjects extends React.Component<any, any> {
     this.state = {
       loading: false,
       group: props.route.params.group,
+      schedule: [],
       days: [],
+      subgroups: [],
+      isChanged: false,
     }
   }
 
   async initGroup() {
-    console.log(this.state.group.name);
     this.props.navigation.setOptions({
       headerTitle: '',
       headerLeft: () => <View><Text style={styles.title}>{this.state.group.name}</Text></View>,
       headerRight: () => <Ionicons onPress={this.goToSettings.bind(this)} style={styles.settings} name="md-settings" size={25} color="black" />
     })
     await this.loadSchedule();
+    // @ts-ignore
+    let subgroups = JSON.parse(await AsyncStorage.getItem('subgroups'));
+    if (!subgroups || subgroups.length === 0) subgroups = await this.selectGroup();
+    this.setState({
+      days: this.state.schedule.map((day: any) => <DayList key={`${day.title}${new Date()}`} subgroups={subgroups} day={day}/>)
+    })
+
   }
 
   async componentDidMount() {
@@ -38,17 +47,21 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
-    return prevState.group.name === nextProps.route.params.group.name ?
-      {isChanged: false} : {isChanged: true, group: nextProps.route.params.group}
+    if (nextProps.route.params.needRefresh) {
+      nextProps.route.params.needRefresh = false
+      return {isChanged: true}
+    } else if (!prevState.group.name === nextProps.route.params.group.name) {
+      return {isChanged: true, group: nextProps.route.params.group}
+    }
+    return {isChanged: false}
   }
 
   async componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>, snapshot?: any) {
     if (this.state.isChanged) {
-      this.setState({loading: true })
+      this.setState({ loading: true })
       await this.initGroup()
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }
-
   }
 
   componentWillUnmount() {
@@ -61,9 +74,31 @@ export default class ListSubjects extends React.Component<any, any> {
 
   async loadSchedule() {
     const {schedule} = await getScheduleByGroup(this.state.group.name);
-    this.setState({
-      days: schedule.map((day: any) => <DayList key={day.title} day={day}/>)
-    })
+    this.setState({schedule})
+  }
+
+  async selectGroup() {
+    const lessons = []
+    const {schedule} = this.state
+    let found = false;
+    for (const day of schedule) {
+      for (const property in day) {
+        if (day[property] && Array.isArray(day[property]) && ((day[property].length > 1 ) || (day[property][0] && day[property][0].subgroup) || (day[property][1]))) {
+          console.log(day[property].length, 'here', property);
+          if (!found) {
+            alert('У вашій групі виявлено підгрупи. За замовчуванням відображається перша підгрупа, відредагувати їх можна в налаштуваннях.')
+            found = true
+          }
+          for (const lesson of day[property]) {
+            lessons.push(lesson.name)
+          }
+        }
+      }
+    }
+
+    const subgroups = Array.from(new Set(lessons)).map((lesson: string) => ({name: lesson, subgroup: 1}));
+    await AsyncStorage.setItem('subgroups', JSON.stringify(subgroups))
+    return subgroups;
   }
 
   handleBackButton = () => {

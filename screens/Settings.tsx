@@ -62,6 +62,8 @@ export default class Settings extends React.Component<any, any> {
   }
 
 
+
+
   render() {
     return (
       <Container loading={this.state.loading}>
@@ -74,7 +76,6 @@ export default class Settings extends React.Component<any, any> {
           <TouchableOpacity style={styles.mainSection} onPress={this.controlSubgroupsButton.bind(this)}>
             <Text style={styles.title}>Керування підгрупами</Text>
             <Text style={styles.description}>Відображення пар та натходження сповіщень (якщо ті увімкнені) за підгрупами. За замовчуванням вибрана перша підгрупа</Text>
-
           </TouchableOpacity>
           <TouchableOpacity style={styles.mainSection} onPress={this.changeGroupButton.bind(this)}>
             <Text style={styles.title}>Змінити групу</Text>
