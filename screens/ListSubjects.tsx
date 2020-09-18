@@ -1,17 +1,26 @@
 import * as React from 'react';
-import {Alert, BackHandler, TouchableHighlight, StyleSheet, Text, TouchableOpacity, View, Button} from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { Container } from '../components/Container';
 import {Ionicons} from "@expo/vector-icons";
 import {getScheduleByGroup} from "../src/Schedule";
 import AsyncStorage from "@react-native-community/async-storage";
 import DayList from "../components/DayList";
 import Swiper from "react-native-swiper";
+import {getWeekNumber} from "../src/Date";
 
 
 export default class ListSubjects extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+
+    this.swiperRef = (swiper: any) => this.swiper = swiper
 
     this.state = {
       loading: false,
@@ -20,6 +29,9 @@ export default class ListSubjects extends React.Component<any, any> {
       days: [],
       subgroups: [],
       isChanged: false,
+      currentDay: 1,
+      currentWeek: 1,
+      firstItem: 0,
     }
   }
 
@@ -29,28 +41,34 @@ export default class ListSubjects extends React.Component<any, any> {
       headerLeft: () => <View><Text style={styles.title}>{this.state.group.name}</Text></View>,
       headerRight: () => <Ionicons onPress={this.goToSettings.bind(this)} style={styles.settings} name="md-settings" size={25} color="black" />
     })
+    this.setCurrentDay()
     await this.loadSchedule();
     // @ts-ignore
     let subgroups = JSON.parse(await AsyncStorage.getItem('subgroups'));
     if (!subgroups || subgroups.length === 0) subgroups = await this.selectGroup();
     this.setState({
-      days: this.state.schedule.map((day: any) => <DayList key={`${day.title}${new Date()}`} subgroups={subgroups} day={day}/>)
+      days: this.state.schedule.map((day: any, i: number) => {
+        if (day.title.endsWith(this.state.currentWeek) && day.index === this.state.currentDay) {
+          console.log(this.state.schedule.length, i + 1);
+          this.setState({firstItem: i})
+        }
+        return <DayList key={`${day.title}${new Date()}`} subgroups={subgroups} day={day}/>
+      })
     })
-
   }
 
   async componentDidMount() {
     this.setState({loading: true })
     await this.initGroup()
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    this.setState({loading: false})
+    this.setState({loading: false}, () => this.swiper.scrollTo(this.state.firstItem))
   }
 
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
     if (nextProps.route.params.needRefresh) {
       nextProps.route.params.needRefresh = false
       return {isChanged: true}
-    } else if (!prevState.group.name === nextProps.route.params.group.name) {
+    } else if (prevState.group.name !== nextProps.route.params.group.name) {
       return {isChanged: true, group: nextProps.route.params.group}
     }
     return {isChanged: false}
@@ -60,7 +78,7 @@ export default class ListSubjects extends React.Component<any, any> {
     if (this.state.isChanged) {
       this.setState({ loading: true })
       await this.initGroup()
-      this.setState({ loading: false })
+      this.setState({ loading: false }, () => this.swiper.scrollTo(this.state.firstItem))
     }
   }
 
@@ -73,8 +91,15 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   async loadSchedule() {
-    const {schedule} = await getScheduleByGroup(this.state.group.name);
-    this.setState({schedule})
+    let scheduleFromStore = await AsyncStorage.getItem('schedule');
+    if (!scheduleFromStore) {
+      const {schedule} = await getScheduleByGroup(this.state.group.name);
+      await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
+      scheduleFromStore = schedule
+    } else {
+      scheduleFromStore = JSON.parse(scheduleFromStore)
+    }
+    this.setState({schedule: scheduleFromStore})
   }
 
   async selectGroup() {
@@ -84,7 +109,6 @@ export default class ListSubjects extends React.Component<any, any> {
     for (const day of schedule) {
       for (const property in day) {
         if (day[property] && Array.isArray(day[property]) && ((day[property].length > 1 ) || (day[property][0] && day[property][0].subgroup) || (day[property][1]))) {
-          console.log(day[property].length, 'here', property);
           if (!found) {
             alert('У вашій групі виявлено підгрупи. За замовчуванням відображається перша підгрупа, відредагувати їх можна в налаштуваннях.')
             found = true
@@ -99,6 +123,14 @@ export default class ListSubjects extends React.Component<any, any> {
     const subgroups = Array.from(new Set(lessons)).map((lesson: string) => ({name: lesson, subgroup: 1}));
     await AsyncStorage.setItem('subgroups', JSON.stringify(subgroups))
     return subgroups;
+  }
+
+  setCurrentDay() {
+    const currentDate = new Date();
+    const weekDay = currentDate.getDay();
+    const weekNumberByYear = getWeekNumber(currentDate);
+    const weekNumber = weekNumberByYear % 2 == 1 ? 1 : 2
+    this.setState({currentDay: weekDay, currentWeek: weekNumber})
   }
 
   handleBackButton = () => {
@@ -120,11 +152,15 @@ export default class ListSubjects extends React.Component<any, any> {
 
   render() {
     const {days} = this.state
+    setTimeout(() => this.swiper.scrollTo(this.state.firstItem), 2000)
 
     return (
       <Container loading={this.state.loading}>
         <Swiper
+          ref={this.swiperRef}
+          index={0}
           showsButtons={false}
+          loop={false}
           dot={<View/>}
           activeDot={<View/>}
         >

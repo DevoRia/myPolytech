@@ -7,6 +7,15 @@ import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Navigation from "./navigation";
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default class App extends React.Component {
 
