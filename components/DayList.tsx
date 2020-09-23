@@ -13,6 +13,10 @@ export default class Scheduler extends React.Component<any, any> {
   }
 
   renderItem(item: any, time: string) {
+    if (!item) return (<View/>)
+
+    item = Object.values(item)
+
     if (item.length === 1 && !(item[0].subgroup)) return this.simpleCard(item[0], time)
     for (let i = 0; i < item.length; i++) {
       if (item[i]) {
@@ -46,6 +50,7 @@ export default class Scheduler extends React.Component<any, any> {
   }
 
   render() {
+    console.log(typeof this.state.day.firstLesson);
     return (
       <View style={styles.wrapper}>
         <View style={styles.dayTitlePosition}>

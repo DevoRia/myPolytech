@@ -93,7 +93,7 @@ export default class ListSubjects extends React.Component<any, any> {
   async loadSchedule() {
     let scheduleFromStore = await AsyncStorage.getItem('schedule');
     if (!scheduleFromStore) {
-      const {schedule} = await getScheduleByGroup(this.state.group.name);
+      const schedule = await getScheduleByGroup(this.state.group.name);
       await AsyncStorage.setItem('schedule', JSON.stringify(schedule));
       scheduleFromStore = schedule
     } else {

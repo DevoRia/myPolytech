@@ -28,7 +28,7 @@ export default class ChooseGroup extends React.Component<any, any> {
       headerLeft: () => <View><Text style={styles.navigation}>{Constants.manifest.name}</Text></View>,
     })
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-    const {list} = await getGroups();
+    const list = await getGroups();
     this.setState({ serverData: list })
     this.setState({loading: false})
   }

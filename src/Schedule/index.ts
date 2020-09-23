@@ -1,5 +1,12 @@
-import { api } from '../../config.json';
+
+import { firebase } from '../Firebase'
 
 export const getScheduleByGroup = async (group: string) => {
-  return fetch(`${api}/schedule/?group=${group}`).then((response) => response.json())
+  const ref = await firebase.database()
+    .ref(`Schedules/${group}`)
+
+  const snapshot: object = await new Promise(resolve => ref
+    .on('value', (snapshot) => resolve(snapshot.val())));
+
+  return Object.values(snapshot)
 };

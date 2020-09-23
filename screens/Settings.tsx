@@ -68,9 +68,9 @@ export default class Settings extends React.Component<any, any> {
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
-          <TouchableOpacity style={styles.mainSection} onPress={this.switchNotificationsButton.bind(this)}>
-            <Text style={styles.title}>Сповіщення</Text>
-            <Text style={styles.description}>Увімкнення або вимкнення сповіщень. Сповіщення приходять за 5 хвилин до початку пари.</Text>
+          <TouchableOpacity disabled={true} style={styles.mainSection} onPress={this.switchNotificationsButton.bind(this)}>
+            <Text style={[styles.title, styles.disable]}>Сповіщення</Text>
+            <Text style={[styles.description, styles.disable]}>Увімкнення або вимкнення сповіщень. Сповіщення приходять за 5 хвилин до початку пари.</Text>
             <Switch style={styles.switchNotify}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.mainSection} onPress={this.controlSubgroupsButton.bind(this)}>
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: 'black'
+  },
+  disable: {
+    color: 'grey'
   },
   switchNotify: {
     right: 20,
