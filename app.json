@@ -18,7 +18,8 @@
       "**/*"
     ],
     "android": {
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "package": "com.vdmdevlab.myPolytech"
     }
   }
 }

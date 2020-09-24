@@ -49,7 +49,6 @@ export default class ListSubjects extends React.Component<any, any> {
     this.setState({
       days: this.state.schedule.map((day: any, i: number) => {
         if (day.title.endsWith(this.state.currentWeek) && day.index === this.state.currentDay) {
-          console.log(this.state.schedule.length, i + 1);
           this.setState({firstItem: i})
         }
         return <DayList key={`${day.title}${new Date()}`} subgroups={subgroups} day={day}/>

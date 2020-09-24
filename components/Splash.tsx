@@ -55,7 +55,7 @@ export default class Splash extends React.Component {
   });
 
   render() {
-    const pathColor = Animated.concat('rgb(', 12, ',', 0, ',', this.anim, ')');
+    const pathColor = Animated.concat('rgb(', 0, ',', 0, ',', 0, ')');
     return (
       <Animated.View style={{...styles.container, ...{ backgroundColor: pathColor } }}>
         <Animated.Text style={[this.scaleText, styles.title]}>

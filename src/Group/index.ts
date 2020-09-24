@@ -7,11 +7,15 @@ const headers = {
 
 
 export const getGroups = async () => {
-  const ref = await firebase.database()
-    .ref('Groups')
+  try {
+    const ref = await firebase.database()
+      .ref('Groups')
 
-  const snapshot: object = await new Promise(resolve => ref
-    .on('value', (snapshot) => resolve(snapshot.val())));
+    const snapshot: object = await new Promise(resolve => ref
+      .on('value', (snapshot) => resolve(snapshot.val())));
 
-  return Object.values(snapshot)
+    return Object.values(snapshot)
+  } catch (e) {
+    alert('Проблеми з інтернетом')
+  }
 };
