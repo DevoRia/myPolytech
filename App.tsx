@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
-import Splash from "./components/Splash";
 import * as Font from "expo-font";
 import {Ionicons} from "@expo/vector-icons";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import Navigation from "./navigation";
 import * as Notifications from 'expo-notifications';
+import {Container} from "./components/Container";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -51,7 +51,7 @@ export default class App extends React.Component {
         </SafeAreaProvider>
       );
     } else {
-      return <Splash/>
+      return (<Container loading={true}/>)
     }
   }
 }

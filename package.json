@@ -15,7 +15,6 @@
     "@expo/vector-icons": "^10.0.0",
     "@react-native-community/async-storage": "~1.11.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-native-community/viewpager": "3.3.0",
     "@react-native-firebase/app": "^8.4.3",
     "@react-native-firebase/database": "^7.5.7",
     "@react-navigation/bottom-tabs": "^5.6.1",
@@ -45,12 +44,9 @@
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
     "react-native-searchable-dropdown": "^1.1.1",
-    "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^12.1.0",
     "react-native-swiper": "^1.6.0",
-    "react-native-web": "~0.11.7",
-    "react-schedule-calendar": "^0.22.8",
-    "rnschedule": "^0.0.5"
+    "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
