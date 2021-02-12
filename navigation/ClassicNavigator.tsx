@@ -8,6 +8,7 @@ import Start from "../screens/Start";
 import ListSubjects from "../screens/ListSubjects";
 import Settings from '../screens/Settings';
 import SettingsSubgroups from "../screens/SettingsSubgroups";
+import Subject from "../screens/Subject";
 
 export default function ClassicNavigator() {
   return (<TabNavigator/>);
@@ -52,6 +53,11 @@ function TabNavigator() {
         name="Settings"
         component={Settings}
         options={{ headerTitle: "Settings" }}
+      />
+      <TabStack.Screen
+        name="Subject"
+        component={Subject}
+        options={{ headerTitle: "Subject" }}
       />
       <TabStack.Screen
         name="SettingsSubgroups"

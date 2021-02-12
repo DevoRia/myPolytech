@@ -51,9 +51,23 @@ export default class ListSubjects extends React.Component<any, any> {
         if (day.title.endsWith(this.state.currentWeek) && day.index === this.state.currentDay) {
           this.setState({firstItem: i})
         }
-        return <DayList key={`${day.title}${new Date()}`} subgroups={subgroups} day={day}/>
+        const week = parseInt(day.title.substr(day.title.length - 1, day.title.length));
+        return <DayList onClick={this.goToSubjectPage.bind(this)} key={day.id} subgroups={subgroups} day={day} week={week}/>
       })
     })
+  }
+
+  goToSubjectPage(item: any, time: string, day: number, week: number) {
+    return this.props.navigation.navigate('Subject', {
+      ...item,
+      time,
+      group: this.state.group,
+      isToday: this.isToday(day, week)
+    })
+  }
+
+  isToday(day: number, week: number) {
+    return (day === this.state.currentDay) && (week === this.state.currentWeek)
   }
 
   async componentDidMount() {
@@ -128,7 +142,7 @@ export default class ListSubjects extends React.Component<any, any> {
     const currentDate = new Date();
     const weekDay = currentDate.getDay();
     const weekNumberByYear = getWeekNumber(currentDate);
-    const weekNumber = weekNumberByYear % 2 == 1 ? 1 : 2
+    const weekNumber = weekNumberByYear % 2 == 1 ? 2 : 1 // Replace if change semestr
     this.setState({currentDay: weekDay, currentWeek: weekNumber})
   }
 

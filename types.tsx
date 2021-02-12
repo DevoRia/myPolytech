@@ -13,6 +13,7 @@ export type TabParamList = {
   TabScreen: undefined;
   ListSubjects: undefined;
   Settings: undefined;
+  Subject: undefined;
   SettingsSubgroups: undefined;
 };
 

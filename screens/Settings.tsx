@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {Switch, SectionList, StyleSheet, Text, View, TouchableOpacity, Alert, BackHandler} from 'react-native';
+import {Switch, StyleSheet, Text, View, TouchableOpacity, Alert, BackHandler} from 'react-native';
 import { Container } from '../components/Container';
-import {Ionicons} from "@expo/vector-icons";
 import {clearGroupData} from "../src/Settings";
 
 
@@ -20,24 +19,6 @@ export default class Settings extends React.Component<any, any> {
       headerTitle: 'Налаштування',
     })
   }
-
-  switchNotificationsButton = () => {
-    Alert.alert(
-      'Закрити myPolytech?',
-      'Бажаєте закрити додаток?', [{
-        text: 'Ні',
-        onPress: () => {},
-        style: 'cancel'
-      }, {
-        text: 'Так',
-        onPress: () => BackHandler.exitApp()
-      }, ], {
-        cancelable: false
-      }
-    )
-    return true;
-  }
-
 
   controlSubgroupsButton = () => this.props.navigation.navigate('SettingsSubgroups')
 
@@ -68,7 +49,7 @@ export default class Settings extends React.Component<any, any> {
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
-          <TouchableOpacity disabled={true} style={styles.mainSection} onPress={this.switchNotificationsButton.bind(this)}>
+          <TouchableOpacity disabled={true} style={styles.mainSection}>
             <Text style={[styles.title, styles.disable]}>Сповіщення</Text>
             <Text style={[styles.description, styles.disable]}>Увімкнення або вимкнення сповіщень. Сповіщення приходять за 5 хвилин до початку пари.</Text>
             <Switch style={styles.switchNotify}/>

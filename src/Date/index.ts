@@ -6,3 +6,25 @@ export function getWeekNumber(date: Date) {
   return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 }
 
+export enum Days {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY,
+}
+
+export const getDayTitle =(dayNumber: number) => {
+  switch (dayNumber+1) {
+    case Days.MONDAY : return 'Понеділок'
+    case Days.TUESDAY : return 'Вівторок'
+    case Days.WEDNESDAY : return 'Середа'
+    case Days.THURSDAY : return 'Четвер'
+    case Days.FRIDAY : return 'П\'ятниця'
+    case Days.SATURDAY : return 'Субота'
+    case Days.SUNDAY : return 'Неділя'
+  }
+}
+

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { Container, Header, Title, Content, Icon, Card, CardItem, Text, Body, Left, Right, Footer, } from "native-base";
 
 export default class Scheduler extends React.Component<any, any> {
@@ -8,7 +8,9 @@ export default class Scheduler extends React.Component<any, any> {
     super(props);
     this.state = {
       day: props.day,
-      subgroups: props.subgroups
+      week: props.week,
+      subgroups: props.subgroups,
+      onClick: props.onClick,
     }
   }
 
@@ -29,16 +31,19 @@ export default class Scheduler extends React.Component<any, any> {
   simpleCard(item: any, time: string) {
     if (!item) return (<View/>)
     return (
-      <Card style={styles.card}>
-        <CardItem style={styles.cardItem}>
-          <Text style={styles.time}>{time}</Text>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.info}>{`${item.type} ауд. ${item.room}`}</Text>
-            <Text style={styles.info}>{item.teacher}</Text>
-          </View>
-        </CardItem>
-      </Card>
+      <TouchableOpacity onPress={() => this.state.onClick(item, time, this.state.day.index, this.state.week)} >
+        <Card style={styles.card}>
+          <CardItem style={styles.cardItem}>
+            <Text style={styles.time}>{time}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.info}>{`${item.type} ауд. ${item.room}`}</Text>
+              <Text style={styles.info}>{item.teacher}</Text>
+            </View>
+          </CardItem>
+        </Card>
+      </TouchableOpacity>
+
     )
   }
 
@@ -50,7 +55,6 @@ export default class Scheduler extends React.Component<any, any> {
   }
 
   render() {
-    console.log(typeof this.state.day.firstLesson);
     return (
       <View style={styles.wrapper}>
         <View style={styles.dayTitlePosition}>
