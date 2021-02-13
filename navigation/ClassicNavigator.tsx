@@ -9,6 +9,8 @@ import ListSubjects from "../screens/ListSubjects";
 import Settings from '../screens/Settings';
 import SettingsSubgroups from "../screens/SettingsSubgroups";
 import Subject from "../screens/Subject";
+import Login from "../screens/Login";
+import WelcomeScreen from "../screens/WelcomeScreen";
 
 export default function ClassicNavigator() {
   return (<TabNavigator/>);
@@ -28,6 +30,14 @@ function TabNavigator() {
       <TabStack.Screen
         name="Start"
         component={Start}
+        options={{
+          headerTitle: Constants.manifest.name,
+          gestureEnabled: false,
+        }}
+      />
+      <TabStack.Screen
+        name="WelcomeScreen"
+        component={WelcomeScreen}
         options={{
           headerTitle: Constants.manifest.name,
           gestureEnabled: false,
@@ -58,6 +68,11 @@ function TabNavigator() {
         name="Subject"
         component={Subject}
         options={{ headerTitle: "Subject" }}
+      />
+      <TabStack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerTitle: "Login" }}
       />
       <TabStack.Screen
         name="SettingsSubgroups"

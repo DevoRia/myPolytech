@@ -2,6 +2,8 @@ import * as React from 'react';
 import {Switch, StyleSheet, Text, View, TouchableOpacity, Alert, BackHandler} from 'react-native';
 import { Container } from '../components/Container';
 import {clearGroupData} from "../src/Settings";
+import {isLoggedIn, logOut} from "../src/Students";
+import Browser from "../components/Browser";
 
 
 export default class Settings extends React.Component<any, any> {
@@ -11,6 +13,7 @@ export default class Settings extends React.Component<any, any> {
 
     this.state = {
       loading: false,
+      logout: false,
     }
   }
 
@@ -32,8 +35,17 @@ export default class Settings extends React.Component<any, any> {
       }, {
         text: 'Так',
         onPress: async () => {
+          const isLogIn = await isLoggedIn();
           await clearGroupData()
-          this.props.navigation.navigate('TabScreen')
+          if (isLogIn) {
+            this.setState({
+              loading: true,
+              logout: true
+            })
+            await logOut()
+          } else {
+            this.props.navigation.navigate('WelcomeScreen')
+          }
         }
       }, ], {
         cancelable: true
@@ -42,10 +54,21 @@ export default class Settings extends React.Component<any, any> {
     return true;
   }
 
-
+  logoutCallback() {
+    this.setState({
+      loading: false,
+      logout: false
+    })
+    this.props.navigation.navigate('WelcomeScreen')
+  }
 
 
   render() {
+    let browser = null
+    if (this.state.logout) {
+      browser = <Browser uri={'https://cabinet.ztu.edu.ua'} logoutCallback={this.logoutCallback.bind(this)} logout={this.state.logout}/>
+    }
+
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
@@ -59,9 +82,12 @@ export default class Settings extends React.Component<any, any> {
             <Text style={styles.description}>Відображення пар та натходження сповіщень (якщо ті увімкнені) за підгрупами. За замовчуванням вибрана перша підгрупа</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.mainSection} onPress={this.changeGroupButton.bind(this)}>
-            <Text style={styles.title}>Змінити групу</Text>
+            <Text style={styles.title}>Вийти</Text>
             <Text style={styles.description}>Обрати іншу групу</Text>
           </TouchableOpacity>
+          <View style={styles.browser}>
+            {browser}
+          </View>
       </View>
       </Container>
     );
@@ -94,6 +120,10 @@ const styles = StyleSheet.create({
     right: 20,
     top: 50,
     position: "absolute",
-  }
+  },
+  browser: {
+    width: 0,
+    height: 0
+  },
 
 });

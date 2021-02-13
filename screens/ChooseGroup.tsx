@@ -9,6 +9,7 @@ import {getGroups} from "../src/Group";
 import AsyncStorage from "@react-native-community/async-storage";
 import {Ionicons} from "@expo/vector-icons";
 import Constants from "expo-constants";
+import Browser from "../components/Browser";
 
 export default class ChooseGroup extends React.Component<any, any> {
 
@@ -24,17 +25,11 @@ export default class ChooseGroup extends React.Component<any, any> {
   async componentDidMount() {
     this.setState({loading: true})
     this.props.navigation.setOptions({
-      headerTitle: '',
-      headerLeft: () => <View><Text style={styles.navigation}>{Constants.manifest.name}</Text></View>,
+      headerTitle: Constants.manifest.name,
     })
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     const list = await getGroups();
     this.setState({ serverData: list })
     this.setState({loading: false})
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   onItemSelect(item: any) {
@@ -48,23 +43,6 @@ export default class ChooseGroup extends React.Component<any, any> {
     await AsyncStorage.setItem('group', JSON.stringify(this.state.selectedItem));
     this.props.navigation.navigate('ListSubjects', {group: this.state.selectedItem});
     this.setState({loading: false})
-  }
-
-  handleBackButton = () => {
-    Alert.alert(
-      'Закрити myPolytech?',
-      'Бажаєте закрити додаток?', [{
-        text: 'Ні',
-        onPress: () => {},
-        style: 'cancel'
-      }, {
-        text: 'Так',
-        onPress: () => BackHandler.exitApp()
-      }, ], {
-        cancelable: true
-      }
-    )
-    return true;
   }
 
   render() {

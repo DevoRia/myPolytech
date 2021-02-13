@@ -20,7 +20,7 @@ export default class ChooseGroup extends React.Component<any, any> {
     if (group) {
       this.props.navigation.navigate('ListSubjects', {group: JSON.parse(group)});
     } else {
-      this.props.navigation.navigate('TabScreen');
+      this.props.navigation.navigate('WelcomeScreen');
     }
     this.setState({loading: false})
   }

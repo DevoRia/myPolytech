@@ -15,6 +15,7 @@ export type TabParamList = {
   Settings: undefined;
   Subject: undefined;
   SettingsSubgroups: undefined;
+  [key: string]: undefined;
 };
 
 export type TabTwoParamList = {
