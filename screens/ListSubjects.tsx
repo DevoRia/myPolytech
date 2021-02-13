@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import DayList from "../components/DayList";
 import Swiper from "react-native-swiper";
 import {getWeekNumber} from "../src/Date";
+import {cancelAllScheduledNotificationsAsync} from "expo-notifications";
 
 
 export default class ListSubjects extends React.Component<any, any> {
@@ -46,24 +47,27 @@ export default class ListSubjects extends React.Component<any, any> {
     // @ts-ignore
     let subgroups = JSON.parse(await AsyncStorage.getItem('subgroups'));
     if (!subgroups || subgroups.length === 0) subgroups = await this.selectGroup();
+    await cancelAllScheduledNotificationsAsync();
     this.setState({
       days: this.state.schedule.map((day: any, i: number) => {
         if (day.title.endsWith(this.state.currentWeek) && day.index === this.state.currentDay) {
           this.setState({firstItem: i})
         }
         const week = parseInt(day.title.substr(day.title.length - 1, day.title.length));
-        return <DayList onClick={this.goToSubjectPage.bind(this)} key={day.id + new Date().getTime()} subgroups={subgroups} day={day} week={week}/>
+        return <DayList
+          group={this.state.group}
+          isTodayFn={this.isToday.bind(this)}
+          onClick={this.goToSubjectPage.bind(this)}
+          key={day.id + new Date().getTime()}
+          subgroups={subgroups}
+          day={day} week={week}
+        />
       })
     })
   }
 
-  goToSubjectPage(item: any, time: string, day: number, week: number) {
-    return this.props.navigation.navigate('Subject', {
-      ...item,
-      time,
-      group: this.state.group,
-      isToday: this.isToday(day, week)
-    })
+  goToSubjectPage(item: any) {
+    return this.props.navigation.navigate('Subject', {...item})
   }
 
   isToday(day: number, week: number) {

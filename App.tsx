@@ -17,10 +17,18 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export default class App extends React.Component {
+export default class App extends React.Component<any, any> {
 
   state = {
     appIsReady: false,
+  };
+
+  componentWillMount() {
+    Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse);
+  }
+
+  _handleNotificationResponse = (response: any) => {
+    return this.props.navigation.navigate('Subject', {...response.notification.request.content.data})
   };
 
   async componentDidMount() {
