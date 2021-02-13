@@ -23,14 +23,6 @@ export default class App extends React.Component<any, any> {
     appIsReady: false,
   };
 
-  componentWillMount() {
-    Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse);
-  }
-
-  _handleNotificationResponse = (response: any) => {
-    return this.props.navigation.navigate('Subject', {...response.notification.request.content.data})
-  };
-
   async componentDidMount() {
     try {
       await SplashScreen.preventAutoHideAsync();

@@ -10,9 +10,7 @@ export const clearGroupData = async () => {
   await Notifications.cancelAllScheduledNotificationsAsync()
 }
 
-export const enablePushes = async (token: string) => {
-  await saveStudentData(token)
-  await AsyncStorage.setItem('pushToken', token)
+export const enablePushes = async () => {
   await AsyncStorage.setItem('pushTokenEnabled', 'yes')
 }
 
