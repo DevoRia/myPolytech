@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Alert, BackHandler, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import {Alert, BackHandler, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import { Container } from '../components/Container';
 import {View, Text} from "../components/Themed";
 import Constants from "expo-constants";
-import {Ionicons} from "@expo/vector-icons";
+const icon = require("../assets/images/icon.png");
 
 export default class WelcomeScreen extends React.Component<any, any> {
 
@@ -50,6 +50,9 @@ export default class WelcomeScreen extends React.Component<any, any> {
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
+          <View style={styles.iconContainer}>
+            <Image style={styles.icon} source={icon}/>
+          </View>
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => this.props.navigation.navigate('Login')}
@@ -81,6 +84,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: 'center',
   },
+  iconContainer: {
+    marginBottom: 50
+  },
+  icon: {
+    width: 150,
+    height: 150,
+  },
   navigation: {
     padding: 30,
     fontSize: 30,
@@ -100,7 +110,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   loginlessTitle: {
-    marginTop: 9,
+    marginTop: 5,
     textAlign: 'center',
     fontSize: 15,
     color: '#000000',
