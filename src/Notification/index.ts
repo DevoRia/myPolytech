@@ -3,7 +3,6 @@ import moment from 'moment';
 import {isEnabledPushes} from "../Settings";
 
 const getValidTime = (time: string) => {
-  console.log(time);
   switch (time) {
     case '8:30-9:50': return {hour:8,minute:30,second:0,millisecond:0}
     case '10:00-11:20': return {hour:10,minute:0,second:0,millisecond:0}
