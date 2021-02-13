@@ -13,10 +13,13 @@ import AsyncStorage from "@react-native-community/async-storage";
 import DayList from "../components/DayList";
 import Swiper from "react-native-swiper";
 import {getWeekNumber} from "../src/Date";
-import {cancelAllScheduledNotificationsAsync} from "expo-notifications";
-
+import {cancelAllScheduledNotificationsAsync, removeNotificationSubscription} from "expo-notifications";
+import * as Notifications from "expo-notifications";
+import {  Subscription } from '@unimodules/core';
 
 export default class ListSubjects extends React.Component<any, any> {
+
+  private notificationSubscription: Subscription;
 
   constructor(props: any) {
     super(props);
@@ -58,7 +61,7 @@ export default class ListSubjects extends React.Component<any, any> {
           group={this.state.group}
           isTodayFn={this.isToday.bind(this)}
           onClick={this.goToSubjectPage.bind(this)}
-          key={day.id + new Date().getTime()}
+          key={`${day.id}-${week}-${new Date().getTime()}`}
           subgroups={subgroups}
           day={day} week={week}
         />
@@ -75,11 +78,16 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   async componentDidMount() {
+    this.notificationSubscription = Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse);
     this.setState({loading: true })
     await this.initGroup()
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({loading: false}, () => this.swiper.scrollTo(this.state.firstItem))
   }
+
+  _handleNotificationResponse = (response: any) => {
+    this.props.navigation.navigate('Subject', response.notification.request.content.data)
+  };
 
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
     if (nextProps.route.params.needRefresh) {
@@ -100,6 +108,7 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   componentWillUnmount() {
+    removeNotificationSubscription(this.notificationSubscription)
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 

@@ -36,7 +36,7 @@ export default class Settings extends React.Component<any, any> {
   changeGroupButton = () => {
     Alert.alert(
       'Впевнені?',
-      'Ну всяке буває, раптом випадково.', [{
+      'Вихід з аккаунту / Зміна розкладу', [{
         text: 'Ні',
         onPress: () => {},
         style: 'cancel'
@@ -70,36 +70,11 @@ export default class Settings extends React.Component<any, any> {
     this.props.navigation.navigate('WelcomeScreen')
   }
 
-  async registerForPushNotificationsAsync() {
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
-      this.setState({
-        isEnabledPush: true,
-      })
-      return token;
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-
-  }
-
   async switchPushEnabled() {
     this.setState({loading: true})
     if (!this.state.isEnabledPush) {
-      const token = await this.registerForPushNotificationsAsync();
-      if (token) {
-        await enablePushes(token)
-      }
+      await enablePushes()
+      this.setState({isEnabledPush: true})
     } else {
       await disablePushes()
       this.setState({isEnabledPush: false})
