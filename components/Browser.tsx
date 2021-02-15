@@ -71,16 +71,22 @@ export default class Browser extends React.Component<any, any> {
       for (let i = 0; i < pars.length; i++) {
         const par = pars[i];
         const time = getTextFromClass(par, 'time');
-        let link = null;
         let textInfo = null;
         let subject = par.innerHTML.match(/<div style="color:gray;">(.*?)<\\/div>/g);
+        let links = par.innerHTML.match(/<a href="(.*?)" target="_blank">(.*?)<\\/a>/g);
         if (subject && subject[0]) {
           textInfo = subject[0]
             .replace(/<div style="color:gray;">/g, '')
             .replace(/<\\/div>/g, '')
         }
+        if (links) {
+        links = links.map(link => link
+          .replace(/<a href="(.*?)" target="_blank">/g, '')
+          .replace(/<\\/a>/g, '')
+        );
+        }
         data[time] = {
-          link: link,
+          links: links,
           textInfo: textInfo,
         }
       }

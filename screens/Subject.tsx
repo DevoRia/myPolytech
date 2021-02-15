@@ -3,6 +3,7 @@ import {Alert, BackHandler, StyleSheet, Text, View} from 'react-native';
 import { Container } from '../components/Container';
 import Browser from "../components/Browser";
 import {isLoggedIn} from "../src/Students";
+import MeetingLink from "../components/MeetingLink";
 
 
 export default class Subject extends React.Component<any, any> {
@@ -48,8 +49,13 @@ export default class Subject extends React.Component<any, any> {
       if (this.state.targetData) {
         if (this.state.targetData.textInfo) {
           targetButton = (<View><View style={styles.borderAdditionalInfo}/><Text>{this.state.targetData.textInfo}</Text></View>)
-        } else if (this.state.targetData.link) {
-          targetButton = <Text>{this.state.targetData.textInfo}</Text>
+        } else if (this.state.targetData.links) {
+          const links = this.state.targetData.links
+            .map(link => <MeetingLink key={new Date().getTime()} link={link}/>)
+          targetButton = <View>
+            <View style={styles.borderAdditionalInfo}/>
+            <View style={styles.btns}>{links}</View>
+          </View>
         }
       } else {
         browser = <Browser uri={'https://cabinet.ztu.edu.ua/site/schedule'} todayCallback={this.getDataFromCabinet.bind(this)}/>
@@ -68,9 +74,9 @@ export default class Subject extends React.Component<any, any> {
             <View style={styles.textFieldContainer}><Text>Аудиторія: </Text><Text style={styles.textField}>{this.state.item.room}</Text></View>
             <View style={styles.textFieldContainer}><Text>Тип:  </Text><Text style={styles.textField}>{this.state.item.type}</Text></View>
           </View>
-          <Container loading={this.state.loadingAddional}>
+          <View>
             {targetButton}
-          </Container>
+          </View>
           <View style={styles.browser}>
             {browser}
           </View>
@@ -84,6 +90,10 @@ export default class Subject extends React.Component<any, any> {
 const styles = StyleSheet.create({
   screenContainer: {
     padding: 30
+  },
+  btns: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   titleContainer: {
     marginBottom: 8
