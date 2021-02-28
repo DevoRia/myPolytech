@@ -18,9 +18,21 @@
       "**/*"
     ],
     "android": {
+      "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "package": "com.vdmdevlab.myPolytech",
-      "versionCode": 1
+      "versionCode": 7,
+      "permissions": [
+        "INTERNET",
+        "SYSTEM_ALERT_WINDOW",
+        "READ_INTERNAL_STORAGE",
+        "READ_PHONE_STATE",
+        "VIBRATE",
+        "ACCESS_NETWORK_STATE",
+        "WAKE_LOCK",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     }
   }
 }
