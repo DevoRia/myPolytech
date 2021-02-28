@@ -18,6 +18,10 @@ export const logIn = async () => {
 export const logOut = async () => {
   const isLogin = await isLoggedIn();
   if (isLogin) {
+    await AsyncStorage.removeItem('subgroups');
+    await AsyncStorage.removeItem('schedule');
+    await AsyncStorage.removeItem('group');
+    await AsyncStorage.removeItem('pushTokenEnabled');
     await AsyncStorage.setItem('login', 'no');
   }
 }

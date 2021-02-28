@@ -2,7 +2,7 @@
   "expo": {
     "name": "myPolytech",
     "slug": "myPolytech",
-    "version": "1.0.0",
+    "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mypol",
@@ -19,7 +19,8 @@
     ],
     "android": {
       "useNextNotificationsApi": true,
-      "package": "com.vdmdevlab.myPolytech"
+      "package": "com.vdmdevlab.myPolytech",
+      "versionCode": 1
     }
   }
 }

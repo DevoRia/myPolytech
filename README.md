@@ -4,6 +4,8 @@ Personal page of student
 
 ## Config application
 
+Application sh*t-code-edition 😏
+
 Add *config.json* to root project
 ```
 {
