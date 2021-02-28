@@ -52,7 +52,7 @@ export default class ListSubjects extends React.Component<any, any> {
           this.setState({firstItem: i})
         }
         const week = parseInt(day.title.substr(day.title.length - 1, day.title.length));
-        return <DayList onClick={this.goToSubjectPage.bind(this)} key={day.id + new Date().getTime()} subgroups={subgroups} day={day} week={week}/>
+        return <DayList onClick={this.goToSubjectPage.bind(this)} key={i + new Date().getTime()} subgroups={subgroups} day={day} week={week}/>
       })
     })
   }

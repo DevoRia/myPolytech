@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
-import { Container, Header, Title, Content, Icon, Card, CardItem, Text, Body, Left, Right, Footer, } from "native-base";
+import { Card, CardItem, Text } from "native-base";
 
-export default class Scheduler extends React.Component<any, any> {
+export default class DayList extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
