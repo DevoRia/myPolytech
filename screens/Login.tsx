@@ -26,6 +26,7 @@ export default class Login extends React.Component<any, any> {
     this.setState({loading: true})
     await logIn()
     const group = await getGroupByName(data.group);
+    await AsyncStorage.removeItem('schedule')
     await AsyncStorage.setItem('group', JSON.stringify(group));
     this.props.navigation.navigate('ListSubjects', {group});
     this.setState({loading: false})

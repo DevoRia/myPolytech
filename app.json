@@ -2,7 +2,7 @@
   "expo": {
     "name": "myPolytech",
     "slug": "myPolytech",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mypol",
@@ -21,7 +21,7 @@
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "package": "com.vdmdevlab.myPolytech",
-      "versionCode": 7,
+      "versionCode": 8,
       "permissions": [
         "INTERNET",
         "SYSTEM_ALERT_WINDOW",

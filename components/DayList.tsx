@@ -1,24 +1,16 @@
 import * as React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { Card, CardItem, Text } from "native-base";
-import {setCurrentDayNotifications} from "../src/Notification";
 
-export default class Scheduler extends React.Component<any, any> {
+export default class DayList extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
     this.state = {
       day: props.day,
       week: props.week,
-      group: props.group,
       subgroups: props.subgroups,
       onClick: props.onClick,
-      isTodayFn: props.isTodayFn,
     }
   }
 
@@ -38,20 +30,8 @@ export default class Scheduler extends React.Component<any, any> {
 
   simpleCard(item: any, time: string) {
     if (!item) return (<View/>)
-    const isToday = this.state.isTodayFn(this.state.day.index, this.state.week);
-
-    const itemData = {
-      ...item,
-      isToday,
-      time,
-      group: this.state.group
-    }
-
-    if (isToday){
-      setCurrentDayNotifications(itemData)
-    }
     return (
-      <TouchableWithoutFeedback onPress={() => this.state.onClick(itemData)} >
+      <TouchableOpacity onPress={() => this.state.onClick(item, time, this.state.day.index, this.state.week)} >
         <Card style={styles.card}>
           <CardItem style={styles.cardItem}>
             <Text style={styles.time}>{time}</Text>
@@ -62,7 +42,7 @@ export default class Scheduler extends React.Component<any, any> {
             </View>
           </CardItem>
         </Card>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
 
     )
   }

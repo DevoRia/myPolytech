@@ -40,6 +40,7 @@ export default class ChooseGroup extends React.Component<any, any> {
 
   async onSubmitItem() {
     this.setState({loading: true})
+    await AsyncStorage.removeItem('schedule')
     await AsyncStorage.setItem('group', JSON.stringify(this.state.selectedItem));
     this.props.navigation.navigate('ListSubjects', {group: this.state.selectedItem});
     this.setState({loading: false})
