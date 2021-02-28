@@ -13,9 +13,13 @@ import AsyncStorage from "@react-native-community/async-storage";
 import DayList from "../components/DayList";
 import Swiper from "react-native-swiper";
 import {getWeekNumber} from "../src/Date";
-
+import {cancelAllScheduledNotificationsAsync, removeNotificationSubscription} from "expo-notifications";
+import * as Notifications from "expo-notifications";
+import {  Subscription } from '@unimodules/core';
 
 export default class ListSubjects extends React.Component<any, any> {
+
+  private notificationSubscription: Subscription;
 
   constructor(props: any) {
     super(props);
@@ -46,24 +50,27 @@ export default class ListSubjects extends React.Component<any, any> {
     // @ts-ignore
     let subgroups = JSON.parse(await AsyncStorage.getItem('subgroups'));
     if (!subgroups || subgroups.length === 0) subgroups = await this.selectGroup();
+    await cancelAllScheduledNotificationsAsync();
     this.setState({
       days: this.state.schedule.map((day: any, i: number) => {
         if (day.title.endsWith(this.state.currentWeek) && day.index === this.state.currentDay) {
           this.setState({firstItem: i})
         }
         const week = parseInt(day.title.substr(day.title.length - 1, day.title.length));
-        return <DayList onClick={this.goToSubjectPage.bind(this)} key={day.id + new Date().getTime()} subgroups={subgroups} day={day} week={week}/>
+        return <DayList
+          group={this.state.group}
+          isTodayFn={this.isToday.bind(this)}
+          onClick={this.goToSubjectPage.bind(this)}
+          key={`${day.id}-${week}-${new Date().getTime()}`}
+          subgroups={subgroups}
+          day={day} week={week}
+        />
       })
     })
   }
 
-  goToSubjectPage(item: any, time: string, day: number, week: number) {
-    return this.props.navigation.navigate('Subject', {
-      ...item,
-      time,
-      group: this.state.group,
-      isToday: this.isToday(day, week)
-    })
+  goToSubjectPage(item: any) {
+    return this.props.navigation.navigate('Subject', {...item})
   }
 
   isToday(day: number, week: number) {
@@ -71,11 +78,16 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   async componentDidMount() {
+    this.notificationSubscription = Notifications.addNotificationResponseReceivedListener(this._handleNotificationResponse);
     this.setState({loading: true })
     await this.initGroup()
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({loading: false}, () => this.swiper.scrollTo(this.state.firstItem))
   }
+
+  _handleNotificationResponse = (response: any) => {
+    this.props.navigation.navigate('Subject', response.notification.request.content.data)
+  };
 
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
     if (nextProps.route.params.needRefresh) {
@@ -96,6 +108,7 @@ export default class ListSubjects extends React.Component<any, any> {
   }
 
   componentWillUnmount() {
+    removeNotificationSubscription(this.notificationSubscription)
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, BackHandler, StyleSheet, Text, View} from 'react-native';
 import { Container } from '../components/Container';
 import Browser from "../components/Browser";
 import {isLoggedIn} from "../src/Students";
@@ -23,7 +23,14 @@ export default class Subject extends React.Component<any, any> {
       headerTitle: this.state.item.time,
     })
     this.setState({loading: false, loggedIn, loadingAddional: loggedIn})
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => this.props.navigation.navigate('ListSubjects')
 
   getDataFromCabinet(data) {
     if (data[this.state.item.time]) {

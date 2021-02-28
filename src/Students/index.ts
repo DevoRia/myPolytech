@@ -1,6 +1,7 @@
 
 import { firebase } from '../Firebase'
 import AsyncStorage from "@react-native-community/async-storage";
+import {cancelAllScheduledNotificationsAsync} from "expo-notifications";
 
 export const saveStudentData = async (student: any) => {
   try {
@@ -17,6 +18,7 @@ export const logIn = async () => {
 
 export const logOut = async () => {
   const isLogin = await isLoggedIn();
+  await cancelAllScheduledNotificationsAsync();
   if (isLogin) {
     await AsyncStorage.removeItem('subgroups');
     await AsyncStorage.removeItem('schedule');
