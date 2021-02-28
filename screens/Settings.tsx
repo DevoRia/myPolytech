@@ -72,11 +72,11 @@ export default class Settings extends React.Component<any, any> {
     return (
       <Container loading={this.state.loading}>
         <View style={styles.container}>
-          <TouchableOpacity disabled={true} style={styles.mainSection}>
-            <Text style={[styles.title, styles.disable]}>Сповіщення</Text>
-            <Text style={[styles.description, styles.disable]}>Увімкнення або вимкнення сповіщень. Сповіщення приходять за 5 хвилин до початку пари.</Text>
-            <Switch style={styles.switchNotify}/>
-          </TouchableOpacity>
+          {/*<TouchableOpacity disabled={true} style={styles.mainSection}>*/}
+          {/*  <Text style={[styles.title, styles.disable]}>Сповіщення</Text>*/}
+          {/*  <Text style={[styles.description, styles.disable]}>Увімкнення або вимкнення сповіщень. Сповіщення приходять за 5 хвилин до початку пари.</Text>*/}
+          {/*  <Switch style={styles.switchNotify}/>*/}
+          {/*</TouchableOpacity>*/}
           <TouchableOpacity style={styles.mainSection} onPress={this.controlSubgroupsButton.bind(this)}>
             <Text style={styles.title}>Керування підгрупами</Text>
             <Text style={styles.description}>Відображення пар та натходження сповіщень (якщо ті увімкнені) за підгрупами. За замовчуванням вибрана перша підгрупа</Text>
